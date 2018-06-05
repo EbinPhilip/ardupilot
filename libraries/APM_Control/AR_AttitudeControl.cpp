@@ -424,7 +424,7 @@ float AR_AttitudeControl::get_throttle_out_stop(bool motor_limit_low, bool motor
 // for balancebot
 // return a throttle output from -1 to +1 given a desired pitch angle
 // desired_pitch is in radians
-float AR_AttitudeControl::get_throttle_out_from_pitch(float desired_pitch = 0)
+float AR_AttitudeControl::get_throttle_out_from_pitch(float desired_pitch)
 {
     // calculate dt
     const uint32_t now = AP_HAL::millis();
@@ -438,7 +438,7 @@ float AR_AttitudeControl::get_throttle_out_from_pitch(float desired_pitch = 0)
     _balance_last_ms = now;
 
     const float pitch_error = desired_pitch - _ahrs.pitch;
-    printf("pitch: %f\n",degrees(_ahrs.pitch));
+    printf("pitch: %f error: %f\n",degrees(_ahrs.pitch),degrees(pitch_error));
     if (pitch_error<0.01f)
         return 0.0f;
     _pitch_to_throttle_pid.set_input_filter_all(pitch_error);

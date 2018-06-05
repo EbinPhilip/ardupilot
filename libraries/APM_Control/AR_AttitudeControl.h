@@ -20,9 +20,9 @@
 #define AR_ATTCONTROL_THR_SPEED_IMAX    1.00f
 #define AR_ATTCONTROL_THR_SPEED_D       0.00f
 #define AR_ATTCONTROL_THR_SPEED_FILT    10.00f
-#define AR_ATTCONTROL_PITCH_THR_P       150.0f
-#define AR_ATTCONTROL_PITCH_THR_I       30.0f
-#define AR_ATTCONTROL_PITCH_THR_D       70.0f
+#define AR_ATTCONTROL_PITCH_THR_P       160.0f
+#define AR_ATTCONTROL_PITCH_THR_I       50.0f
+#define AR_ATTCONTROL_PITCH_THR_D       30.0f
 #define AR_ATTCONTROL_PITCH_THR_IMAX    30.0f
 #define AR_ATTCONTROL_PITCH_THR_FILT    10.0f
 #define AR_ATTCONTROL_DT                0.02f
@@ -89,7 +89,7 @@ public:
     // for balancebot
     // return a throttle output from -1 to +1 given a desired pitch angle
     // desired_pitch is in radians
-    float get_throttle_out_from_pitch(float desired_pitch);
+    float get_throttle_out_from_pitch(float desired_pitch = 0);
 
     // low level control accessors for reporting and logging
     AC_P& get_steering_angle_p() { return _steer_angle_p; }

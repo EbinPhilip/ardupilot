@@ -58,17 +58,25 @@ void BalanceBot::update(const struct sitl_input &input)
     // how much time has passed?
     float delta_time = frame_time_us * 1.0e-6f;
 
-    // speed along x axis, +ve is forward
-    float speed = velocity_ef.x;
-
     // speed in m/s in body frame
     Vector3f velocity_body = dcm.transposed() * velocity_ef;
+
+    // speed along x axis, +ve is forward
+    float speed = velocity_ef.x;
 
     // yaw rate in degrees/s
     float yaw_rate = calc_yaw_rate(steering, velocity_body.x);
 
+    // target speed with current throttle
+    float target_speed = throttle * max_speed;
+
+    float force_on_body;
+
     //input force to the cart
-    float force_on_body = throttle * max_force; //N
+    if (target_speed != 0)
+        force_on_body = ((target_speed - speed) / max_speed) * max_force; //N
+    else
+        force_on_body = 0;
 
     float r, p, y;
     dcm.to_euler(&r, &p, &y);

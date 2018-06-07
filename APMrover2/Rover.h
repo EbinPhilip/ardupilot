@@ -546,9 +546,6 @@ private:
     bool disarm_motors(void);
     bool is_boat() const;
 
-    // BalanceBot.cpp
-    void balance_pitch(float &);
-
     enum Failsafe_Action {
         Failsafe_Action_None          = 0,
         Failsafe_Action_RTL           = 1,
@@ -574,6 +571,10 @@ private:
 public:
     void mavlink_delay_cb();
     void failsafe_check();
+
+    // BalanceBot.cpp
+    void balance_pitch(float &);
+    bool is_BalanceBot();
 
     void update_soft_armed();
     // Motor test

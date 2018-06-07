@@ -230,6 +230,11 @@ void AP_MotorsUGV::output(bool armed, float ground_speed, float dt)
     // slew limit throttle
     slew_limit_throttle(dt);
 
+    if(rover.is_BalanceBot()){
+        rover.balance_pitch(_throttle);
+    }
+
+
     // output for regular steering/throttle style frames
     output_regular(armed, ground_speed, _steering, _throttle);
 
@@ -484,7 +489,7 @@ void AP_MotorsUGV::output_omni(bool armed, float steering, float throttle)
         const float Vy = -(sinf(theta)*magnitude);
 
         // calculate output throttle for each motor and scale it back to a -100 to 100 range
-        // calculations are done using the following equations: MOTOR1 = –vx, MOTOR2 = 0.5 * v – v(3/2) * vy, MOTOR 3 = 0.5 * vx + v(3/2) * vy
+        // calculations are done using the following equations: MOTOR1 = ï¿½vx, MOTOR2 = 0.5 * v ï¿½ v(3/2) * vy, MOTOR 3 = 0.5 * vx + v(3/2) * vy
         // safe_sqrt((3)/2) used because the motors are 120 degrees apart in the frame, this setup is mandatory
         const int16_t motor_1 = (((-Vx) + scaled_steering) - (2500)) * (100 - (-100)) / (3500 - (2500)) + (-100);
         const int16_t motor_2 = ((((0.5*Vx)-((safe_sqrt(3)/2)*Vy)) + scaled_steering) - (1121)) * (100 - (-100)) / (2973 - (1121)) + (-100);

@@ -34,6 +34,10 @@ public:
     static Aircraft *create(const char *home_str, const char *frame_str) {
         return new BalanceBot(home_str, frame_str);
     }
+
+private:
+    // vehicle frame x velocity
+    float velocity_vf_x;
 };
 
 } // namespace SITL

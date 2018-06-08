@@ -58,25 +58,14 @@ void BalanceBot::update(const struct sitl_input &input)
     // how much time has passed?
     float delta_time = frame_time_us * 1.0e-6f;
 
-    // speed in m/s in body frame
-    Vector3f velocity_body = dcm.transposed() * velocity_ef;
-
-    // speed along x axis, +ve is forward
-    float speed = velocity_ef.x;
-
     // yaw rate in degrees/s
-    float yaw_rate = calc_yaw_rate(steering, velocity_body.x);
+    float yaw_rate = calc_yaw_rate(steering, velocity_vf_x);
 
     // target speed with current throttle
     float target_speed = throttle * max_speed;
 
-    float force_on_body;
-
     //input force to the cart
-    if (target_speed != 0)
-        force_on_body = ((target_speed - speed) / max_speed) * max_force; //N
-    else
-        force_on_body = 0;
+    float force_on_body = ((target_speed - velocity_vf_x) / max_speed) * max_force; //N
 
     float r, p, y;
     dcm.to_euler(&r, &p, &y);
@@ -84,22 +73,19 @@ void BalanceBot::update(const struct sitl_input &input)
 
     float ang_vel = gyro.y;
     
-    // temp variables to hold updated theta and angular rate
-    float new_ang_vel = ang_vel;
-    float new_theta = theta;
-
-    float accel = (force_on_body - (damping_constant*speed) - mass_rod*length*ang_vel*ang_vel*sin(theta)
+    //vehicle frame x acceleration
+    float accel_vf_x = (force_on_body - (damping_constant*velocity_vf_x) - mass_rod*length*ang_vel*ang_vel*sin(theta)
     + (3.0f/4.0f)*mass_rod*GRAVITY_MSS*sin(theta)*cos(theta))
             / (mass_cart + mass_rod - (3.0f/4.0f)*mass_rod*cos(theta)*cos(theta));
 
-    float angular_accel = mass_rod*length*(GRAVITY_MSS*sin(theta) + accel*cos(theta))
+    float angular_accel_bf_y = mass_rod*length*(GRAVITY_MSS*sin(theta) + accel_vf_x*cos(theta))
         /(I_rod + mass_rod*length*length);
 
-    new_ang_vel += angular_accel * delta_time;
-    new_theta += new_ang_vel * delta_time;
+    ang_vel += angular_accel_bf_y * delta_time;
+    theta += ang_vel * delta_time;
+    theta = fmod(theta,radians(360));
 
-    ang_vel= new_ang_vel;
-    theta = fmod(new_theta,radians(360));
+    velocity_vf_x += accel_vf_x * delta_time;
 
     gyro = Vector3f(0,ang_vel,radians(yaw_rate));
 
@@ -108,14 +94,14 @@ void BalanceBot::update(const struct sitl_input &input)
     dcm.normalize();
 
     // accel in body frame due to motor
-    accel_body = Vector3f(0, 0, 0);
+    accel_body = Vector3f(accel_vf_x*cos(theta), 0, -accel_vf_x*sin(theta));
 
     // add in accel due to direction change
-    accel_body.y += radians(yaw_rate) * speed;
+    accel_body.y += radians(yaw_rate) * velocity_vf_x;
 
     // now in earth frame
     Vector3f accel_earth = dcm * accel_body;
-    accel_earth += Vector3f(accel, 0, GRAVITY_MSS);
+    accel_earth += Vector3f(0, 0, GRAVITY_MSS);
 
     // we are on the ground, so our vertical accel is zero
     accel_earth.z = 0;
@@ -128,12 +114,12 @@ void BalanceBot::update(const struct sitl_input &input)
         gyro.zero();
         theta = 0;
         ang_vel = 0;
-        angular_accel = 0;
+        velocity_vf_x =0;
     }
     
     // work out acceleration as seen by the accelerometers. It sees the kinematic
     // acceleration (ie. real movement), plus gravity
-    accel_body = dcm.transposed() * (accel_earth + Vector3f(0, 0, -GRAVITY_MSS));
+    accel_body += dcm.transposed() * (Vector3f(0, 0, -GRAVITY_MSS));
 
     // new velocity vector
     velocity_ef += accel_earth * delta_time;
@@ -141,7 +127,7 @@ void BalanceBot::update(const struct sitl_input &input)
     // new position vector
     position += (velocity_ef * delta_time);
 
-//    ::printf("acc:%f speed:%f theta: %d\ ang_vel %d\n",throttle, velocity_ef.x,(int)degrees(theta),(int)degrees(ang_vel));
+    ::printf("acc:%f speed:%f theta: %d\ ang_vel %d\n",throttle, velocity_vf_x,(int)degrees(theta),(int)degrees(ang_vel));
 
     // update lat/lon/altitude
     update_position();

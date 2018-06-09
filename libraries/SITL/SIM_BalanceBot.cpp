@@ -67,6 +67,7 @@ void BalanceBot::update(const struct sitl_input &input)
     //input force to the cart
     float force_on_body = ((target_speed - velocity_vf_x) / max_speed) * max_force; //N
 
+    // obtain roll, pitch, yaw from dcm
     float r, p, y;
     dcm.to_euler(&r, &p, &y);
     float theta = p;
@@ -81,10 +82,12 @@ void BalanceBot::update(const struct sitl_input &input)
     float angular_accel_bf_y = mass_rod*length*(GRAVITY_MSS*sin(theta) + accel_vf_x*cos(theta))
         /(I_rod + mass_rod*length*length);
 
+    // update theta and angular velocity
     ang_vel += angular_accel_bf_y * delta_time;
     theta += ang_vel * delta_time;
     theta = fmod(theta,radians(360));
 
+    // update x velocity in vehicle frame
     velocity_vf_x += accel_vf_x * delta_time;
 
     gyro = Vector3f(0,ang_vel,radians(yaw_rate));
@@ -128,6 +131,10 @@ void BalanceBot::update(const struct sitl_input &input)
     position += (velocity_ef * delta_time);
 
     ::printf("acc:%f speed:%f theta: %d\ ang_vel %d\n",throttle, velocity_vf_x,(int)degrees(theta),(int)degrees(ang_vel));
+
+    // neglect roll
+    dcm.to_euler(&r, &p, &y);
+    dcm.from_euler(0.0f, p, y);
 
     // update lat/lon/altitude
     update_position();

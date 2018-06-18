@@ -42,7 +42,7 @@ void BalanceBot::update(const struct sitl_input &input)
     const float mass_cart = 1.0f; // kg
     const float mass_rod = 1.0f; //kg
 
-    const float max_force = 5.0f; //N
+    const float max_force = 50.0f; //N
 
     const float I_rod = (mass_rod*4*length*length)/12.0f;
 
@@ -130,11 +130,12 @@ void BalanceBot::update(const struct sitl_input &input)
     // new position vector
     position += (velocity_ef * delta_time);
 
-    ::printf("acc:%f speed:%f theta: %d\ ang_vel %d\n",throttle, velocity_vf_x,(int)degrees(theta),(int)degrees(ang_vel));
+//    ::printf("acc:%f speed:%f theta: %d\ ang_vel %d\n",throttle, velocity_vf_x,(int)degrees(theta),(int)degrees(ang_vel));
 
     // neglect roll
     dcm.to_euler(&r, &p, &y);
     dcm.from_euler(0.0f, p, y);
+    use_smoothing = true;
 
     // update lat/lon/altitude
     update_position();

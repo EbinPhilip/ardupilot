@@ -433,8 +433,11 @@ float AR_AttitudeControl::get_throttle_out_stop(bool motor_limit_low, bool motor
 // for balancebot
 // return a throttle output from -1 to +1 given a desired pitch angle
 // desired_pitch is in radians
-float AR_AttitudeControl::get_throttle_out_from_pitch(float desired_pitch)
+float AR_AttitudeControl::get_throttle_out_from_pitch(float desired_pitch, bool armed)
 {
+    if (!armed){
+        _pitch_to_throttle_pid.reset_I();
+    }
     // calculate dt
     const uint32_t now = AP_HAL::millis();
     float dt = (now - _balance_last_ms) / 1000.0f;

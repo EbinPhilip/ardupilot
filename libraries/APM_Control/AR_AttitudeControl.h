@@ -89,7 +89,7 @@ public:
     // for balancebot
     // return a throttle output from -1 to +1 given a desired pitch angle
     // desired_pitch is in radians
-    float get_throttle_out_from_pitch(float desired_pitch = 0);
+    float get_throttle_out_from_pitch(float desired_pitch, bool armed);
 
     // low level control accessors for reporting and logging
     AC_P& get_steering_angle_p() { return _steer_angle_p; }

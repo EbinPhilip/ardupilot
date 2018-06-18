@@ -231,7 +231,7 @@ void AP_MotorsUGV::output(bool armed, float ground_speed, float dt)
     slew_limit_throttle(dt);
 
     if(rover.is_BalanceBot()){
-        rover.balance_pitch(_throttle);
+        rover.balance_pitch(_throttle, armed);
     }
 
 

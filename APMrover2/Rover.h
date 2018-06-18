@@ -573,7 +573,7 @@ public:
     void failsafe_check();
 
     // BalanceBot.cpp
-    void balance_pitch(float &);
+    void balance_pitch(float &, bool);
     bool is_BalanceBot();
 
     void update_soft_armed();

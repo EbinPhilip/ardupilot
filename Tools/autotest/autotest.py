@@ -21,6 +21,7 @@ import arducopter
 import arduplane
 import ardusub
 import quadplane
+import balancebot
 
 from pysim import util
 from pymavlink import mavutil
@@ -335,6 +336,12 @@ def run_step(step):
                                          frame=opts.frame,
                                          **fly_opts)
         return tester.autotest()
+        
+    if step == 'drive.balancebot':
+        tester = balancebot.AutoTestBalanceBot(binary,
+                                         frame=opts.frame,
+                                         **fly_opts)
+        return tester.autotest()		
 
     if step == 'dive.ArduSub':
         tester = ardusub.AutoTestSub(binary, **fly_opts)
@@ -624,6 +631,7 @@ if __name__ == "__main__":
         'build.APMrover2',
         'defaults.APMrover2',
         'drive.APMrover2',
+        'drive.balancebot',
 
         'build.ArduCopter',
         'defaults.ArduCopter',

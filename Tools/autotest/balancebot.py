@@ -330,7 +330,7 @@ class AutoTestBalanceBot(AutoTest):
         self.progress("Mission OK")
 
     def drive_mission_rover1(self):
-        self.drive_mission(os.path.join(testdir, "rover1.txt"))
+        self.drive_mission(os.path.join(testdir, "balancebot1.txt"))
 
     def do_get_banner(self):
         self.mavproxy.send("long DO_SEND_BANNER 1\n")
@@ -487,18 +487,26 @@ class AutoTestBalanceBot(AutoTest):
             self.wait_ready_to_arm()
             self.arm_vehicle()
 
+            
+            self.run_test("Drive Mission %s" % "balancebot1.txt",
+              self.drive_mission_rover1)
+            
+            #self.run_test("Disarm Vehicle", self.disarm_vehicle)
+
+            #self.progress("Waiting reading for arm")
+            #self.wait_ready_to_arm()
+            #self.arm_vehicle()
+            
             self.run_test("Drive an RTL Mission", self.drive_rtl_mission)
 
             #self.run_test("Learn/Drive Square with Ch7 option",
                           #self.drive_square)
 
-            self.run_test("Drive Mission %s" % "rover1.txt",
-                          self.drive_mission_rover1)
+            #self.run_test("Drive Brake", self.drive_brake)
 
-            self.run_test("Drive Brake", self.drive_brake)
-
+            
             self.run_test("Disarm Vehicle", self.disarm_vehicle)
-
+                          
             self.run_test("Get Banner", self.do_get_banner)
 
             self.run_test("Get Capabilities",

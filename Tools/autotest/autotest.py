@@ -230,7 +230,8 @@ __bin_names = {
     "AntennaTracker": "antennatracker",
     "CopterAVC": "arducopter-heli",
     "QuadPlane": "arduplane",
-    "ArduSub": "ardusub"
+    "ArduSub": "ardusub",
+    "balancebot": "ardurover"
 }
 
 

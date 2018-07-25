@@ -325,6 +325,7 @@ class AutoTestBalanceBot(AutoTest):
         self.mavproxy.send('switch 4\n')  # auto mode
         self.set_rc(3, 1500)
         self.wait_mode('AUTO')
+        
         self.wait_waypoint(1, 4, max_dist=5)
         self.wait_mode('HOLD')
         self.progress("Mission OK")
@@ -420,9 +421,11 @@ class AutoTestBalanceBot(AutoTest):
                                         "rtl.txt")
         self.mavproxy.send('wp load %s\n' % mission_filepath)
         self.mavproxy.expect('Flight plan received')
+        
         self.mavproxy.send('switch 4\n')  # auto mode
         self.set_rc(3, 1500)
         self.wait_mode('AUTO')
+        
         self.mavproxy.expect('Executing RTL')
 
         m = self.mav.recv_match(type='NAV_CONTROLLER_OUTPUT',
@@ -449,6 +452,7 @@ class AutoTestBalanceBot(AutoTest):
             self.progress("Did not get home (%u metres distant > %u)" %
                           (home_distance, home_distance_max))
             raise NotAchievedException()
+
         self.mavproxy.send('switch 6\n')
         self.wait_mode('MANUAL')
         self.progress("RTL Mission OK")
@@ -483,21 +487,18 @@ class AutoTestBalanceBot(AutoTest):
             self.progress("Home location: %s" % self.homeloc)
             self.mavproxy.send('switch 6\n')  # Manual mode
             self.wait_mode('MANUAL')
+
             self.progress("Waiting reading for arm")
             self.wait_ready_to_arm()
             self.arm_vehicle()
+         
+            self.run_test("Drive an RTL Mission", self.drive_rtl_mission)
 
-            
             self.run_test("Drive Mission %s" % "balancebot1.txt",
               self.drive_mission_rover1)
             
-            #self.run_test("Disarm Vehicle", self.disarm_vehicle)
+            self.run_test("Disarm Vehicle", self.disarm_vehicle)
 
-            #self.progress("Waiting reading for arm")
-            #self.wait_ready_to_arm()
-            #self.arm_vehicle()
-            
-            self.run_test("Drive an RTL Mission", self.drive_rtl_mission)
 
             #self.run_test("Learn/Drive Square with Ch7 option",
                           #self.drive_square)
@@ -505,7 +506,6 @@ class AutoTestBalanceBot(AutoTest):
             #self.run_test("Drive Brake", self.drive_brake)
 
             
-            self.run_test("Disarm Vehicle", self.disarm_vehicle)
                           
             self.run_test("Get Banner", self.do_get_banner)
 

@@ -384,6 +384,8 @@ public:
 
     // Airspeed
     AP_Airspeed airspeed;
+
+    AP_Float bal_zero_offset;
 };
 
 extern const AP_Param::Info var_info[];

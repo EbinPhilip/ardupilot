@@ -663,6 +663,8 @@ const AP_Param::GroupInfo ParametersG2::var_info[] = {
     // @Path: ../libraries/AP_Airspeed/AP_Airspeed.cpp
     AP_SUBGROUPINFO(airspeed, "ARSPD", 37, ParametersG2, AP_Airspeed),
 
+    AP_GROUPINFO("BAL_ZERO_OFFSET", 38, ParametersG2, bal_zero_offset, 0),
+
     AP_GROUPEND
 };
 

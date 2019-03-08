@@ -63,6 +63,10 @@ void Gazebo::set_interface_ports(const char* address, const int port_in, const i
 void Gazebo::send_servos(const struct sitl_input &input)
 {
     servo_packet pkt;
+
+    // fetches armed state
+    pkt.armed = hal.util->get_soft_armed();
+
     // should rename servo_command
     // 16 because struct sitl_input.servos is 16 large in SIM_Aircraft.h
     for (unsigned i = 0; i < 16; ++i)

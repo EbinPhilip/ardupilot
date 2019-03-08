@@ -46,6 +46,8 @@ private:
       packet sent to Gazebo
      */
     struct servo_packet {
+      // stores armed state
+      bool armed;
       // size matches sitl_input upstream
       float motor_speed[16];
     };

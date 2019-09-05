@@ -160,10 +160,20 @@ void AP_WheelEncoder::init(void)
         case WheelEncoder_TYPE_QUADRATURE:
             drivers[i] = new AP_WheelEncoder_Quadrature(*this, i, state[i]);
             break;
+#endif
+
+#if CONFIG_HAL_BOARD == HAL_BOARD_SITL
+        case WheelEncoder_TYPE_SITL_QUADRATURE:
+            drivers[i] = new AP_WheelEncoder_SITL_Qaudrature(*this, i, state[i]);
+            break;
+#endif
         case WheelEncoder_TYPE_NONE:
             break;
+            
+        default:
+            break;
         }
-#endif
+
 
         if (drivers[i] != nullptr) {
             // we loaded a driver for this instance, so it must be

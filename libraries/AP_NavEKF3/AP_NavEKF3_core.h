@@ -521,7 +521,7 @@ private:
     struct wheel_odm_elements {
         float           delAng;     // wheel rotation angle measured in body frame - positive is forward movement of vehicle (rad/s)
         float           radius;     // wheel radius (m)
-        const Vector3f *hub_offset; // pointer to XYZ position of the wheel hub in body frame (m)
+        Vector3f hub_offset; // pointer to XYZ position of the wheel hub in body frame (m)
         float           delTime;    // time interval that the measurement was accumulated over (sec)
         uint32_t        time_ms;    // measurement timestamp (msec)
     };

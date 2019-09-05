@@ -146,7 +146,7 @@ void NavEKF3_core::writeWheelOdom(float delAng, float delTime, uint32_t timeStam
         return;
     }
 
-    wheelOdmDataNew.hub_offset = &posOffset;
+    wheelOdmDataNew.hub_offset = posOffset;
     wheelOdmDataNew.delAng = delAng;
     wheelOdmDataNew.radius = radius;
     wheelOdmDataNew.delTime = delTime;

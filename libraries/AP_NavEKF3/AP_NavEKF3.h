@@ -234,7 +234,7 @@ public:
      * posOffset is the XYZ body frame position of the wheel hub (m)
      * radius is the effective rolling radius of the wheel (m)
     */
-    void writeWheelOdom(float delAng, float delTime, uint32_t timeStamp_ms, const Vector3f &posOffset, float radius);
+    void writeWheelOdom(float delAng, float delTime, uint32_t timeStamp_ms, const int instance, float radius);
 
     /*
      * Return data for debugging body frame odometry fusion:
@@ -373,6 +373,10 @@ public:
     // get timing statistics structure
     void getTimingStatistics(int8_t instance, struct ekf_timing &timing) const;
 
+
+    // set quadrature wheel encoder position offsets
+    void setQuadEncoderPosOffset(Vector3f offset, const int instance);    
+
     /*
       check if switching lanes will reduce the normalised
       innovations. This is called when the vehicle code is about to
@@ -393,6 +397,9 @@ private:
 
     uint32_t _frameTimeUsec;        // time per IMU frame
     uint8_t  _framesPerPrediction;  // expected number of IMU frames per prediction
+
+    // quadrature wheel encoder position offset
+    Vector3f quadEncoderPosOffset[2];
     
     // EKF Mavlink Tuneable Parameters
     AP_Int8  _enable;               // zero to disable EKF3

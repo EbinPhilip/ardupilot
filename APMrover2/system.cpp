@@ -122,6 +122,9 @@ void Rover::init_ardupilot()
 
     // init wheel encoders
     g2.wheel_encoder.init();
+    if(ahrs.get_ekf_type() == 3) {
+        setEKFWheelPositionOffsets();
+    }
 
     relay.init();
 
@@ -324,4 +327,12 @@ bool Rover::should_log(uint32_t mask)
 bool Rover::is_boat() const
 {
     return ((enum frame_class)g2.frame_class.get() == FRAME_BOAT);
+}
+
+// copy wheel encoder position offsets to EKF3
+void Rover::setEKFWheelPositionOffsets(void)
+{
+    for(int i=0; i<g2.wheel_encoder.num_sensors(); ++i) {
+        EKF3.setQuadEncoderPosOffset(g2.wheel_encoder.get_pos_offset(i), i);
+    }
 }

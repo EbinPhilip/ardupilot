@@ -89,7 +89,7 @@ void Rover::update_wheel_encoder()
          * timeStamp_ms is the time when the rotation was last measured (msec)
          * posOffset is the XYZ body frame position of the wheel hub (m)
          */
-        EKF3.writeWheelOdom(delta_angle, delta_time, wheel_encoder_last_update_ms[i], g2.wheel_encoder.get_pos_offset(i), g2.wheel_encoder.get_wheel_radius(i));
+        EKF3.writeWheelOdom(delta_angle, delta_time, wheel_encoder_last_update_ms[i], i, g2.wheel_encoder.get_wheel_radius(i));
     }
 
     // record system time update for next iteration

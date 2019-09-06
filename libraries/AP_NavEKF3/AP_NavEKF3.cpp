@@ -1288,11 +1288,11 @@ void NavEKF3::writeBodyFrameOdom(float quality, const Vector3f &delPos, const Ve
  * timeStamp_ms is the time when the rotation was last measured (msec)
  * posOffset is the XYZ body frame position of the wheel hub (m)
 */
-void NavEKF3::writeWheelOdom(float delAng, float delTime, uint32_t timeStamp_ms, const Vector3f &posOffset, float radius)
+void NavEKF3::writeWheelOdom(float delAng, float delTime, uint32_t timeStamp_ms, const int instance, float radius)
 {
     if (core) {
         for (uint8_t i=0; i<num_cores; i++) {
-            core[i].writeWheelOdom(delAng, delTime, timeStamp_ms, posOffset, radius);
+            core[i].writeWheelOdom(delAng, delTime, timeStamp_ms, quadEncoderPosOffset[instance], radius);
         }
     }
 }
@@ -1678,3 +1678,10 @@ void NavEKF3::getTimingStatistics(int8_t instance, struct ekf_timing &timing) co
     }
 }
 
+/*
+  set quadrature wheel encoder posiiton offset
+*/
+void NavEKF3::setQuadEncoderPosOffset(Vector3f offset, const int instance)
+{
+    quadEncoderPosOffset[instance] = offset;
+}

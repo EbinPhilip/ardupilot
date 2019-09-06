@@ -448,6 +448,7 @@ private:
     uint8_t check_digital_pin(uint8_t pin);
     bool should_log(uint32_t mask);
     bool is_boat() const;
+    void setEKFWheelPositionOffsets(void);
 
     enum Failsafe_Action {
         Failsafe_Action_None          = 0,

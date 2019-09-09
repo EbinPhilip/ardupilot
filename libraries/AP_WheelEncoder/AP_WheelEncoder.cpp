@@ -15,6 +15,7 @@
 
 #include "AP_WheelEncoder.h"
 #include "WheelEncoder_Quadrature.h"
+#include "WheelEncoder_SITL_Quadrature.h"
 #include <AP_Logger/AP_Logger.h>
 
 extern const AP_HAL::HAL& hal;
@@ -155,8 +156,9 @@ void AP_WheelEncoder::init(void)
         return;
     }
     for (uint8_t i=0; i<WHEELENCODER_MAX_INSTANCES; i++) {
-#if CONFIG_HAL_BOARD == HAL_BOARD_CHIBIOS
         switch ((WheelEncoder_Type)_type[i].get()) {
+
+#if CONFIG_HAL_BOARD == HAL_BOARD_CHIBIOS
         case WheelEncoder_TYPE_QUADRATURE:
             drivers[i] = new AP_WheelEncoder_Quadrature(*this, i, state[i]);
             break;

@@ -33,6 +33,13 @@ public:
 
 private:
     SITL::SITL *_sitl;
+
+    Location last_location;
+    double last_heading;
+    double last_update_time;
+
+    int32_t  distance_count;
+    uint32_t total_count;
 };
 
 #endif // CONFIG_HAL_BOARD

@@ -25,7 +25,7 @@ const AP_Param::GroupInfo AP_WheelEncoder::var_info[] = {
     // @Param: _TYPE
     // @DisplayName: WheelEncoder type
     // @Description: What type of WheelEncoder is connected
-    // @Values: 0:None,1:Quadrature
+    // @Values: 0:None,1:Quadrature,2: SITL Quadrature
     // @User: Standard
     AP_GROUPINFO_FLAGS("_TYPE", 0, AP_WheelEncoder, _type[0], 0, AP_PARAM_FLAG_ENABLE),
 
@@ -84,7 +84,7 @@ const AP_Param::GroupInfo AP_WheelEncoder::var_info[] = {
     // @Param: 2_TYPE
     // @DisplayName: Second WheelEncoder type
     // @Description: What type of WheelEncoder sensor is connected
-    // @Values: 0:None,1:Quadrature
+    // @Values: 0:None,1:Quadrature,2: SITL Quadrature
     // @User: Standard
     AP_GROUPINFO("2_TYPE",   6, AP_WheelEncoder, _type[1], 0),
 

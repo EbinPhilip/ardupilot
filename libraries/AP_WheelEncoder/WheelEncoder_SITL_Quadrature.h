@@ -32,14 +32,13 @@ public:
     void update(void) override;
 
 private:
-    SITL::SITL *_sitl;
+    SITL::SITL *_sitl; // pointer to SITL singleton
 
-    Location last_location;
-    double last_heading;
-    double last_update_time;
+    Location last_location; // store vehicle location after last update
+    double last_heading; // store vehicle heading after last update
 
-    int32_t  distance_count;
-    uint32_t total_count;
+    int32_t  distance_count; // distance count as no encoder ticks
+    uint32_t total_count; // total no of encoder ticks
 };
 
 #endif // CONFIG_HAL_BOARD

@@ -43,6 +43,11 @@ void Rover::update_wheel_encoder()
     // update encoders
     g2.wheel_encoder.update();
 
+    // Update EKF3 wheel odometry buffer only if EKF3 is used
+    if (ahrs.get_ekf_type() != 3) {
+        return; 
+    }
+
     // initialise on first iteration
     const uint32_t now = AP_HAL::millis();
     if (wheel_encoder_last_ekf_update_ms == 0) {

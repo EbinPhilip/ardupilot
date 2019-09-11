@@ -312,6 +312,10 @@ void Rover::update_current_mode(void)
     }
 
     control_mode->update();
+
+#if CONFIG_HAL_BOARD == HAL_BOARD_SITL
+    test_wheel_encoders();
+#endif
 }
 
 // update mission including starting or stopping commands. called by scheduler at 10Hz
@@ -323,6 +327,31 @@ void Rover::update_mission(void)
         }
     }
 }
+
+#if CONFIG_HAL_BOARD == HAL_BOARD_SITL
+void Rover::test_wheel_encoders() 
+{
+    if(g2.wheel_encoder.num_sensors()<2){
+        return;
+    }
+
+    double v_l = g2.wheel_encoder.get_rate(1) * g2.wheel_encoder.get_wheel_radius(1);
+    double v_r = g2.wheel_encoder.get_rate(2) * g2.wheel_encoder.get_wheel_radius(2);
+    // double l = fabsf(g2.wheel_encoder.get_pos_offset(1).y) + fabsf(g2.wheel_encoder.get_pos_offset(2).y);
+
+    double speed = (v_l + v_r)/2.0f;
+    // double turn_rate;
+    // if (is_zero(l))
+    //     turn_rate = (v_r - v_l)/l;
+    // else
+    //     turn_rate = 0;
+ 
+    float speed_ahrs;
+    g2.attitude_control.get_forward_speed(speed_ahrs);
+
+    std::cout<<"speed:  "<<"ahrs:"<<speed_ahrs<<"   "<<"wenc:"<<speed<<std::endl;
+}
+#endif
 
 Rover rover;
 

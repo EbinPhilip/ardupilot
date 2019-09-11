@@ -88,6 +88,7 @@
 
 #if CONFIG_HAL_BOARD == HAL_BOARD_SITL
 #include <SITL/SITL.h>
+#include <iostream>
 #endif
 
 // Local modules
@@ -351,6 +352,10 @@ private:
     void update_GPS(void);
     void update_current_mode(void);
     void update_mission(void);
+
+#if CONFIG_HAL_BOARD == HAL_BOARD_SITL
+    void test_wheel_encoders();
+#endif
 
     // balance_bot.cpp
     void balancebot_pitch_control(float &throttle);

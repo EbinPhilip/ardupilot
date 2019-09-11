@@ -59,6 +59,8 @@ void AP_WheelEncoder_SITL_Qaudrature::update(void)
     // calculate dt
     double time_now = AP_HAL::millis();
     double dt = (time_now - _state.last_reading_ms)/1000.0f;
+    if (is_zero(dt)) // sanity check
+        return;
 
     // calculate speed and turn rate from distance_diff and heading_diff
     double speed = distance_diff/dt;
@@ -75,8 +77,12 @@ void AP_WheelEncoder_SITL_Qaudrature::update(void)
         return; // invalid instance
     }
 
+    double radius = _frontend.get_wheel_radius(_state.instance);
+    if (is_zero(radius)) // avoid divide by zero
+        return; 
+
     // calculate angle turned and corresponding encoder ticks from wheel angular rate
-    double angle_turned = ( speed/_frontend.get_wheel_radius(_state.instance) ) * dt;
+    double angle_turned = ( speed/radius ) * dt;
     int32_t ticks =  static_cast<int>( ( angle_turned/(2 * M_PI) ) * _frontend.get_counts_per_revolution(_state.instance) );
 
     // update distance count

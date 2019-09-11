@@ -31,6 +31,7 @@ class AP_WheelEncoder
 public:
     friend class AP_WheelEncoder_Backend;
     friend class AP_WheelEncoder_Quadrature;
+    friend class AP_WheelEncoder_SITL_Quadrature;
 
     AP_WheelEncoder(void);
 

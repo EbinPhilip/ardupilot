@@ -32,15 +32,15 @@ void AP_WheelEncoder_SITL_Qaudrature::update(void)
 {
     // Get current location from SITL state
     // scale latitude, longitude and altitude from double to int32_t
-    int32_t lat = _sitl->state.latitude * 1.0e7; // latitude
-    int32_t lnt = _sitl->state.longitude * 1.0e7; // longitude
-    int32_t alt = _sitl->state.altitude * 1.0e2; // altitude
+    int32_t lat = _sitl->state.latitude * 1e7; // latitude
+    int32_t lnt = _sitl->state.longitude * 1e7; // longitude
+    int32_t alt = _sitl->state.altitude * 1e2; // altitude
     Location current_location(lat, lnt, alt, _sitl->state.home.get_alt_frame()); // current location object
 
     // distance travelled after last update in vector form
     Vector2f location_diff = last_location.get_distance_NE(current_location);
     // distance travelled after last update
-    float distance_diff = norm(location_diff.x, location_diff.y);
+    double distance_diff = norm(location_diff.x, location_diff.y);
     // change in heading after last update
     double heading_diff = _sitl->state.heading - last_heading;
 
@@ -53,11 +53,11 @@ void AP_WheelEncoder_SITL_Qaudrature::update(void)
     /* direction of movement is decided by sign of x coordinate of location_diff vector 
     in last_heading frame and angle turned after last update*/
     if ( (location_diff_rotated.x < 0) && ( fabsf(radians(heading_diff))<M_PI ) ) {
-        distance_count *= -1;
+        distance_diff *= -1;
     }
 
     // calculate dt
-    double time_now = AP_HAL::millis();
+    uint32_t time_now = AP_HAL::millis();
     double dt = (time_now - _state.last_reading_ms)/1000.0f;
     if (is_zero(dt)) // sanity check
         return;
@@ -67,11 +67,11 @@ void AP_WheelEncoder_SITL_Qaudrature::update(void)
     double turn_rate = radians(heading_diff)/dt;
 
     // distance from center of wheel axis to each wheel
-    double l = ( fabsf(_frontend.get_pos_offset(1).y) + fabsf(_frontend.get_pos_offset(2).y) )/2.0f;
+    double l = ( fabsf(_frontend.get_pos_offset(0).y) + fabsf(_frontend.get_pos_offset(1).y) )/2.0f;
 
-    if (_state.instance == 1) { 
+    if (_state.instance == 0) { 
         speed = speed - turn_rate*l; // for left wheel
-    } else if(_state.instance ==2) {
+    } else if(_state.instance ==1) {
         speed = speed + turn_rate*l; // for right wheel
     } else {
         return; // invalid instance
